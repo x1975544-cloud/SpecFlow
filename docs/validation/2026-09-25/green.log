@@ -1,0 +1,22 @@
+test_get_tasks_returns_all_original_tasks (workflow_test_0.BaselineTests.test_get_tasks_returns_all_original_tasks) ... ok
+test_post_is_not_supported (workflow_test_0.BaselineTests.test_post_is_not_supported) ... ok
+test_unknown_path_returns_404 (workflow_test_0.BaselineTests.test_unknown_path_returns_404) ... ok
+test_bare_status_is_bad_request (workflow_test_1.StatusFilterTests.test_bare_status_is_bad_request) ... ok
+test_done_preserves_original_fields (workflow_test_1.StatusFilterTests.test_done_preserves_original_fields) ... ok
+test_empty_status_is_bad_request (workflow_test_1.StatusFilterTests.test_empty_status_is_bad_request) ... ok
+test_no_status_preserves_all_original_fields_and_order (workflow_test_1.StatusFilterTests.test_no_status_preserves_all_original_fields_and_order) ... ok
+test_non_get_method_precedes_status_validation (workflow_test_1.StatusFilterTests.test_non_get_method_precedes_status_validation) ... ok
+test_pending_preserves_original_fields_and_order (workflow_test_1.StatusFilterTests.test_pending_preserves_original_fields_and_order) ... ok
+test_percent_encoded_status_value_is_decoded (workflow_test_1.StatusFilterTests.test_percent_encoded_status_value_is_decoded) ... ok
+test_script_entry_point_listens_only_on_localhost_port_8000 (workflow_test_1.StatusFilterTests.test_script_entry_point_listens_only_on_localhost_port_8000) ... ok
+test_sequential_filters_do_not_modify_tasks (workflow_test_1.StatusFilterTests.test_sequential_filters_do_not_modify_tasks) ... ok
+test_status_is_parsed_among_other_query_parameters (workflow_test_1.StatusFilterTests.test_status_is_parsed_among_other_query_parameters) ... ok
+test_unknown_path_precedes_method_and_status_validation (workflow_test_1.StatusFilterTests.test_unknown_path_precedes_method_and_status_validation) ... ok
+test_unknown_path_precedes_status_validation (workflow_test_1.StatusFilterTests.test_unknown_path_precedes_status_validation) ... ok
+test_unknown_status_is_bad_request (workflow_test_1.StatusFilterTests.test_unknown_status_is_bad_request) ... ok
+test_unrelated_parameter_does_not_filter_tasks (workflow_test_1.StatusFilterTests.test_unrelated_parameter_does_not_filter_tasks) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.004s
+
+OK

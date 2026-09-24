@@ -1,0 +1,214 @@
+test_bare_status_is_bad_request (workflow_test_0.StatusFilterTests.test_bare_status_is_bad_request) ... FAIL
+test_done_preserves_original_fields (workflow_test_0.StatusFilterTests.test_done_preserves_original_fields) ... FAIL
+test_empty_status_is_bad_request (workflow_test_0.StatusFilterTests.test_empty_status_is_bad_request) ... FAIL
+test_no_status_preserves_all_original_fields_and_order (workflow_test_0.StatusFilterTests.test_no_status_preserves_all_original_fields_and_order) ... ok
+test_non_get_method_precedes_status_validation (workflow_test_0.StatusFilterTests.test_non_get_method_precedes_status_validation) ... ok
+test_pending_preserves_original_fields_and_order (workflow_test_0.StatusFilterTests.test_pending_preserves_original_fields_and_order) ... FAIL
+test_percent_encoded_status_value_is_decoded (workflow_test_0.StatusFilterTests.test_percent_encoded_status_value_is_decoded) ... FAIL
+test_script_entry_point_listens_only_on_localhost_port_8000 (workflow_test_0.StatusFilterTests.test_script_entry_point_listens_only_on_localhost_port_8000) ... ok
+test_sequential_filters_do_not_modify_tasks (workflow_test_0.StatusFilterTests.test_sequential_filters_do_not_modify_tasks) ... FAIL
+test_status_is_parsed_among_other_query_parameters (workflow_test_0.StatusFilterTests.test_status_is_parsed_among_other_query_parameters) ... FAIL
+test_unknown_path_precedes_method_and_status_validation (workflow_test_0.StatusFilterTests.test_unknown_path_precedes_method_and_status_validation) ... ok
+test_unknown_path_precedes_status_validation (workflow_test_0.StatusFilterTests.test_unknown_path_precedes_status_validation) ... ok
+test_unknown_status_is_bad_request (workflow_test_0.StatusFilterTests.test_unknown_status_is_bad_request) ...
+  test_unknown_status_is_bad_request (workflow_test_0.StatusFilterTests.test_unknown_status_is_bad_request) (value='unknown') ... FAIL
+  test_unknown_status_is_bad_request (workflow_test_0.StatusFilterTests.test_unknown_status_is_bad_request) (value='all') ... FAIL
+  test_unknown_status_is_bad_request (workflow_test_0.StatusFilterTests.test_unknown_status_is_bad_request) (value='Pending') ... FAIL
+  test_unknown_status_is_bad_request (workflow_test_0.StatusFilterTests.test_unknown_status_is_bad_request) (value='DONE') ... FAIL
+  test_unknown_status_is_bad_request (workflow_test_0.StatusFilterTests.test_unknown_status_is_bad_request) (value='pending%20') ... FAIL
+test_unrelated_parameter_does_not_filter_tasks (workflow_test_0.StatusFilterTests.test_unrelated_parameter_does_not_filter_tasks) ... ok
+
+======================================================================
+FAIL: test_bare_status_is_bad_request (workflow_test_0.StatusFilterTests.test_bare_status_is_bad_request)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 75, in test_bare_status_is_bad_request
+    self.assert_error(self.request('status'), 400)
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 52, in assert_error
+    self.assertEqual(response['status'], status)
+AssertionError: 200 != 400
+
+======================================================================
+FAIL: test_done_preserves_original_fields (workflow_test_0.StatusFilterTests.test_done_preserves_original_fields)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 64, in test_done_preserves_original_fields
+    self.assert_tasks(self.request('status=done'), [ORIGINAL_TASKS[1]])
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 49, in assert_tasks
+    self.assertEqual(response['body'], expected)
+AssertionError: Lists differ: [{'id': 1, 'title': 'Read the specification', 'st[148 chars]ng'}] != [{'id': 2, 'title': 'Write the baseline test', 'status': 'done'}]
+
+First differing element 0:
+{'id': 1, 'title': 'Read the specification', 'status': 'pending'}
+{'id': 2, 'title': 'Write the baseline test', 'status': 'done'}
+
+First list contains 2 additional elements.
+First extra element 1:
+{'id': 2, 'title': 'Write the baseline test', 'status': 'done'}
+
+- [{'id': 1, 'status': 'pending', 'title': 'Read the specification'},
+-  {'id': 2, 'status': 'done', 'title': 'Write the baseline test'},
+? ^                                                               ^
+
++ [{'id': 2, 'status': 'done', 'title': 'Write the baseline test'}]
+? ^                                                               ^
+
+-  {'id': 3, 'status': 'pending', 'title': 'Review the implementation'}]
+
+======================================================================
+FAIL: test_empty_status_is_bad_request (workflow_test_0.StatusFilterTests.test_empty_status_is_bad_request)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 72, in test_empty_status_is_bad_request
+    self.assert_error(self.request('status='), 400)
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 52, in assert_error
+    self.assertEqual(response['status'], status)
+AssertionError: 200 != 400
+
+======================================================================
+FAIL: test_pending_preserves_original_fields_and_order (workflow_test_0.StatusFilterTests.test_pending_preserves_original_fields_and_order)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 60, in test_pending_preserves_original_fields_and_order
+    self.assert_tasks(self.request('status=pending'),
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 49, in assert_tasks
+    self.assertEqual(response['body'], expected)
+AssertionError: Lists differ: [{'id[65 chars]id': 2, 'title': 'Write the baseline test', 's[81 chars]ng'}] != [{'id[65 chars]id': 3, 'title': 'Review the implementation', [16 chars]ng'}]
+
+First differing element 1:
+{'id': 2, 'title': 'Write the baseline test', 'status': 'done'}
+{'id': 3, 'title': 'Review the implementation', 'status': 'pending'}
+
+First list contains 1 additional elements.
+First extra element 2:
+{'id': 3, 'title': 'Review the implementation', 'status': 'pending'}
+
+  [{'id': 1, 'status': 'pending', 'title': 'Read the specification'},
+-  {'id': 2, 'status': 'done', 'title': 'Write the baseline test'},
+   {'id': 3, 'status': 'pending', 'title': 'Review the implementation'}]
+
+======================================================================
+FAIL: test_percent_encoded_status_value_is_decoded (workflow_test_0.StatusFilterTests.test_percent_encoded_status_value_is_decoded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 85, in test_percent_encoded_status_value_is_decoded
+    self.assert_tasks(self.request('status=%70ending'),
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 49, in assert_tasks
+    self.assertEqual(response['body'], expected)
+AssertionError: Lists differ: [{'id[65 chars]id': 2, 'title': 'Write the baseline test', 's[81 chars]ng'}] != [{'id[65 chars]id': 3, 'title': 'Review the implementation', [16 chars]ng'}]
+
+First differing element 1:
+{'id': 2, 'title': 'Write the baseline test', 'status': 'done'}
+{'id': 3, 'title': 'Review the implementation', 'status': 'pending'}
+
+First list contains 1 additional elements.
+First extra element 2:
+{'id': 3, 'title': 'Review the implementation', 'status': 'pending'}
+
+  [{'id': 1, 'status': 'pending', 'title': 'Read the specification'},
+-  {'id': 2, 'status': 'done', 'title': 'Write the baseline test'},
+   {'id': 3, 'status': 'pending', 'title': 'Review the implementation'}]
+
+======================================================================
+FAIL: test_sequential_filters_do_not_modify_tasks (workflow_test_0.StatusFilterTests.test_sequential_filters_do_not_modify_tasks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 95, in test_sequential_filters_do_not_modify_tasks
+    self.assert_tasks(pending, [ORIGINAL_TASKS[0], ORIGINAL_TASKS[2]])
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 49, in assert_tasks
+    self.assertEqual(response['body'], expected)
+AssertionError: Lists differ: [{'id[65 chars]id': 2, 'title': 'Write the baseline test', 's[81 chars]ng'}] != [{'id[65 chars]id': 3, 'title': 'Review the implementation', [16 chars]ng'}]
+
+First differing element 1:
+{'id': 2, 'title': 'Write the baseline test', 'status': 'done'}
+{'id': 3, 'title': 'Review the implementation', 'status': 'pending'}
+
+First list contains 1 additional elements.
+First extra element 2:
+{'id': 3, 'title': 'Review the implementation', 'status': 'pending'}
+
+  [{'id': 1, 'status': 'pending', 'title': 'Read the specification'},
+-  {'id': 2, 'status': 'done', 'title': 'Write the baseline test'},
+   {'id': 3, 'status': 'pending', 'title': 'Review the implementation'}]
+
+======================================================================
+FAIL: test_status_is_parsed_among_other_query_parameters (workflow_test_0.StatusFilterTests.test_status_is_parsed_among_other_query_parameters)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 81, in test_status_is_parsed_among_other_query_parameters
+    self.assert_tasks(self.request('other=value&status=done&extra=1'),
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 49, in assert_tasks
+    self.assertEqual(response['body'], expected)
+AssertionError: Lists differ: [{'id': 1, 'title': 'Read the specification', 'st[148 chars]ng'}] != [{'id': 2, 'title': 'Write the baseline test', 'status': 'done'}]
+
+First differing element 0:
+{'id': 1, 'title': 'Read the specification', 'status': 'pending'}
+{'id': 2, 'title': 'Write the baseline test', 'status': 'done'}
+
+First list contains 2 additional elements.
+First extra element 1:
+{'id': 2, 'title': 'Write the baseline test', 'status': 'done'}
+
+- [{'id': 1, 'status': 'pending', 'title': 'Read the specification'},
+-  {'id': 2, 'status': 'done', 'title': 'Write the baseline test'},
+? ^                                                               ^
+
++ [{'id': 2, 'status': 'done', 'title': 'Write the baseline test'}]
+? ^                                                               ^
+
+-  {'id': 3, 'status': 'pending', 'title': 'Review the implementation'}]
+
+======================================================================
+FAIL: test_unknown_status_is_bad_request (workflow_test_0.StatusFilterTests.test_unknown_status_is_bad_request) (value='unknown')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 69, in test_unknown_status_is_bad_request
+    self.assert_error(self.request('status=' + value), 400)
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 52, in assert_error
+    self.assertEqual(response['status'], status)
+AssertionError: 200 != 400
+
+======================================================================
+FAIL: test_unknown_status_is_bad_request (workflow_test_0.StatusFilterTests.test_unknown_status_is_bad_request) (value='all')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 69, in test_unknown_status_is_bad_request
+    self.assert_error(self.request('status=' + value), 400)
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 52, in assert_error
+    self.assertEqual(response['status'], status)
+AssertionError: 200 != 400
+
+======================================================================
+FAIL: test_unknown_status_is_bad_request (workflow_test_0.StatusFilterTests.test_unknown_status_is_bad_request) (value='Pending')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 69, in test_unknown_status_is_bad_request
+    self.assert_error(self.request('status=' + value), 400)
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 52, in assert_error
+    self.assertEqual(response['status'], status)
+AssertionError: 200 != 400
+
+======================================================================
+FAIL: test_unknown_status_is_bad_request (workflow_test_0.StatusFilterTests.test_unknown_status_is_bad_request) (value='DONE')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 69, in test_unknown_status_is_bad_request
+    self.assert_error(self.request('status=' + value), 400)
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 52, in assert_error
+    self.assertEqual(response['status'], status)
+AssertionError: 200 != 400
+
+======================================================================
+FAIL: test_unknown_status_is_bad_request (workflow_test_0.StatusFilterTests.test_unknown_status_is_bad_request) (value='pending%20')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 69, in test_unknown_status_is_bad_request
+    self.assert_error(self.request('status=' + value), 400)
+  File "<run>\artifacts\role-call-03-test_writer\trial\tests\test_feature.py", line 52, in assert_error
+    self.assertEqual(response['status'], status)
+AssertionError: 200 != 400
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.008s
+
+FAILED (failures=12)

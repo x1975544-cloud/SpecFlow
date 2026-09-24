@@ -48,6 +48,9 @@ print(json.dumps({"type": "turn.completed", "usage": {"input_tokens": 42, "outpu
             ([], 0),
             ([{"type": "turn.failed", "error": {"message": "Access denied"}}], 0),
             ([{"type": "error", "message": "Transport failed"}, {"type": "turn.completed"}], 0),
+            ([{"type": "error", "message": "Reconnecting... 2/5 (request timed out)"}], 0),
+            ([{"type": "turn.completed"}, {"type": "error", "message": "Reconnecting... 2/5 (request timed out)"}], 0),
+            ([{"type": "error", "message": "Reconnecting... 2/5 (request timed out)"}, {"type": "turn.failed"}], 0),
         ]:
             with self.subTest(events=events, exit_code=exit_code):
                 adapter = self.write_fake('''
@@ -59,7 +62,20 @@ pathlib.Path(args[args.index("--output-last-message") + 1]).write_text(json.dump
                     adapter.run(role="executor", prompt="implement", workspace=self.workspace, artifact_dir=self.artifacts)
                 self.assertIn("diagnostics", str(caught.exception).lower())
         diagnostics = list(self.artifacts.rglob("diagnostics.json"))
-        self.assertEqual(len(diagnostics), 4)
+        self.assertEqual(len(diagnostics), 7)
+
+    def test_recovered_reconnection_with_completed_turn_is_accepted(self):
+        adapter = self.write_fake('''
+args = sys.argv[1:]
+result = {"summary": "recovered", "acceptance_criteria": ["filter"], "tasks": ["test"]}
+pathlib.Path(args[args.index("--output-last-message") + 1]).write_text(json.dumps(result), encoding="utf-8")
+print(json.dumps({"type": "error", "message": "Reconnecting... 2/5 (request timed out)"}))
+print(json.dumps({"type": "turn.completed", "usage": {"input_tokens": 42}}))
+''')
+        result = adapter.run(role="planner", prompt="plan", workspace=self.workspace, artifact_dir=self.artifacts)
+        self.assertEqual(result["summary"], "recovered")
+        diagnostics = json.loads(next(self.artifacts.rglob("diagnostics.json")).read_text())
+        self.assertEqual(diagnostics["warnings"], ["Reconnecting... 2/5 (request timed out)"])
 
     def test_invalid_structured_output_is_rejected(self):
         for payload in ["not JSON", "[]", '{"summary": 17, "acceptance_criteria": [], "tasks": []}', '{"summary": "done", "acceptance_criteria": [9], "tasks": []}', '{"summary": "done"}']:

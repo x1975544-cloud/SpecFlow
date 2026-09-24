@@ -201,8 +201,16 @@ class CodexAdapter:
         if returncode:
             fail(f"Codex exited with status {returncode}.")
         events = [json.loads(line) for line in stdout.splitlines() if line.strip()]
-        for event in events:
+        warnings = []
+        for index, event in enumerate(events):
             event_type = event.get("type", "")
+            # The CLI emits retry notifications as `error`, then may recover.
+            # Only this known notification followed by completion is nonfatal.
+            if (event_type == "error"
+                    and re.fullmatch(r"Reconnecting\.\.\. \d+/\d+ \(.+\)", event.get("message", ""))
+                    and any(later.get("type") == "turn.completed" for later in events[index + 1:])):
+                warnings.append(event["message"])
+                continue
             if event_type == "error" or event_type.endswith(".failed"):
                 fail(f"Codex reported {event_type}.")
         if not any(event.get("type") == "turn.completed" for event in events):
@@ -221,5 +229,6 @@ class CodexAdapter:
         for event in events:
             if event.get("type") == "turn.completed":
                 result["usage"] = event.get("usage", {})
-        (directory / "diagnostics.json").write_text(json.dumps({"role": role, "returncode": returncode, "error": None}, indent=2), encoding="utf-8")
+        (directory / "diagnostics.json").write_text(json.dumps({"role": role, "returncode": returncode, "error": None,
+                                                               "warnings": warnings}, indent=2), encoding="utf-8")
         return result

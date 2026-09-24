@@ -1,0 +1,159 @@
+--- a/tests/test_feature.py
++++ b/tests/test_feature.py
+@@ -0,0 +1,124 @@
++"""Status filtering contract, exercised directly through the WSGI application."""
++import copy
++import json
++from pathlib import Path
++import runpy
++import unittest
++from unittest.mock import patch
++from wsgiref.util import setup_testing_defaults
++
++import todo_api
++
++
++ORIGINAL_TASKS = [
++    {'id': 1, 'title': 'Read the specification', 'status': 'pending'},
++    {'id': 2, 'title': 'Write the baseline test', 'status': 'done'},
++    {'id': 3, 'title': 'Review the implementation', 'status': 'pending'},
++]
++
++
++class StatusFilterTests(unittest.TestCase):
++    def request(self, query='', path='/tasks', method='GET'):
++        environ = {}
++        setup_testing_defaults(environ)
++        environ.update(PATH_INFO=path, REQUEST_METHOD=method, QUERY_STRING=query)
++        response = {}
++
++        def start_response(status, headers, exc_info=None):
++            response['status'] = int(status.split(' ', 1)[0])
++            response['headers'] = dict(headers)
++
++        iterable = todo_api.application(environ, start_response)
++        try:
++            body = b''.join(iterable)
++        finally:
++            if hasattr(iterable, 'close'):
++                iterable.close()
++        self.assertEqual(response['headers']['Content-Type'],
++                         'application/json; charset=utf-8')
++        self.assertEqual(response['headers']['Content-Length'], str(len(body)))
++        try:
++            response['body'] = json.loads(body.decode('utf-8'))
++        except (ValueError, UnicodeError) as error:
++            self.fail('Response must contain UTF-8 JSON: {}'.format(error))
++        return response
++
++    def assert_tasks(self, response, expected):
++        self.assertEqual(response['status'], 200)
++        self.assertIsInstance(response['body'], list)
++        self.assertEqual(response['body'], expected)
++
++    def assert_error(self, response, status):
++        self.assertEqual(response['status'], status)
++        self.assertIsInstance(response['body'], dict)
++        self.assertIn('error', response['body'])
++
++    def test_no_status_preserves_all_original_fields_and_order(self):
++        self.assert_tasks(self.request(), ORIGINAL_TASKS)
++
++    def test_pending_preserves_original_fields_and_order(self):
++        self.assert_tasks(self.request('status=pending'),
++                          [ORIGINAL_TASKS[0], ORIGINAL_TASKS[2]])
++
++    def test_done_preserves_original_fields(self):
++        self.assert_tasks(self.request('status=done'), [ORIGINAL_TASKS[1]])
++
++    def test_unknown_status_is_bad_request(self):
++        for value in ('unknown', 'all', 'Pending', 'DONE', 'pending%20'):
++            with self.subTest(value=value):
++                self.assert_error(self.request('status=' + value), 400)
++
++    def test_empty_status_is_bad_request(self):
++        self.assert_error(self.request('status='), 400)
++
++    def test_bare_status_is_bad_request(self):
++        self.assert_error(self.request('status'), 400)
++
++    def test_unrelated_parameter_does_not_filter_tasks(self):
++        self.assert_tasks(self.request('other=done'), ORIGINAL_TASKS)
++
++    def test_status_is_parsed_among_other_query_parameters(self):
++        self.assert_tasks(self.request('other=value&status=done&extra=1'),
++                          [ORIGINAL_TASKS[1]])
++
++    def test_percent_encoded_status_value_is_decoded(self):
++        self.assert_tasks(self.request('status=%70ending'),
++                          [ORIGINAL_TASKS[0], ORIGINAL_TASKS[2]])
++
++    def test_sequential_filters_do_not_modify_tasks(self):
++        before = copy.deepcopy(todo_api.TASKS)
++        pending = self.request('status=pending')
++        done = self.request('status=done')
++        all_tasks = self.request()
++        self.assertEqual(todo_api.TASKS, before)
++        self.assert_tasks(all_tasks, ORIGINAL_TASKS)
++        self.assert_tasks(pending, [ORIGINAL_TASKS[0], ORIGINAL_TASKS[2]])
++        self.assert_tasks(done, [ORIGINAL_TASKS[1]])
++
++    def test_unknown_path_precedes_status_validation(self):
++        for query in ('status=unknown', 'status=', 'status'):
++            with self.subTest(query=query):
++                self.assert_error(self.request(query, path='/missing'), 404)
++
++    def test_non_get_method_precedes_status_validation(self):
++        for method in ('POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'):
++            for query in ('status=unknown', 'status=', 'status'):
++                with self.subTest(method=method, query=query):
++                    self.assert_error(self.request(query, method=method), 405)
++
++    def test_unknown_path_precedes_method_and_status_validation(self):
++        for query in ('status=unknown', 'status=', 'status'):
++            with self.subTest(query=query):
++                self.assert_error(self.request(query, path='/missing', method='POST'), 404)
++
++    def test_script_entry_point_listens_only_on_localhost_port_8000(self):
++        with patch('wsgiref.simple_server.make_server') as make_server:
++            with patch('builtins.print'):
++                namespace = runpy.run_path(str(Path(todo_api.__file__).resolve()),
++                                           run_name='__main__')
++        make_server.assert_called_once_with('127.0.0.1', 8000, namespace['application'])
++        make_server.return_value.__enter__.return_value.serve_forever.assert_called_once_with()
++
++
++if __name__ == '__main__':
++    unittest.main()
+--- a/todo_api.py
++++ b/todo_api.py
+@@ -1,5 +1,6 @@
+ """Small WSGI project used as the starting point for the SpecFlow demo."""
+ import json
++from urllib.parse import parse_qs
+ from wsgiref.simple_server import make_server
+ 
+ 
+@@ -20,12 +21,20 @@
+ 
+ 
+ def application(environ, start_response):
+-    """Return tasks; query filtering is the feature the agent must implement."""
++    """Return tasks, optionally filtered by status."""
+     if environ.get('PATH_INFO', '/') != '/tasks':
+         return json_response(start_response, '404 Not Found', {'error': 'not found'})
+     if environ.get('REQUEST_METHOD', 'GET') != 'GET':
+         return json_response(start_response, '405 Method Not Allowed', {'error': 'method not allowed'})
+-    return json_response(start_response, '200 OK', TASKS)
++    query = parse_qs(environ.get('QUERY_STRING', ''), keep_blank_values=True)
++    tasks = TASKS
++    if 'status' in query:
++        status = query['status'][0]
++        if status not in ('pending', 'done'):
++            return json_response(start_response, '400 Bad Request',
++                                 {'error': 'status must be pending or done'})
++        tasks = [task for task in TASKS if task['status'] == status]
++    return json_response(start_response, '200 OK', tasks)
+ 
+ 
+ if __name__ == '__main__':

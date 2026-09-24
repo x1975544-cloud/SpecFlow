@@ -54,7 +54,7 @@ python -m specflow report work/demo-resume
 
 ## 真实模型验收
 
-真实模型验收尚未在本交付中完成。当前验证使用离线角色替身；以下步骤需要账户已登录且拥有可用额度，执行记录应按实际结果更新。
+2026-09-25 已完成一次真实模型验收，见[运行记录](validation/2026-09-25/README.md)。以下步骤可用于另建任务复验，需要账户已登录且拥有可用额度；每次结果应以实际执行证据为准。
 
 ```powershell
 python -m specflow doctor

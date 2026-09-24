@@ -1,0 +1,10 @@
+test_done_returns_only_done_tasks (__main__.FeatureAcceptance.test_done_returns_only_done_tasks) ... ok
+test_empty_status_returns_400 (__main__.FeatureAcceptance.test_empty_status_returns_400) ... ok
+test_no_status_returns_all_tasks (__main__.FeatureAcceptance.test_no_status_returns_all_tasks) ... ok
+test_pending_returns_only_pending_tasks (__main__.FeatureAcceptance.test_pending_returns_only_pending_tasks) ... ok
+test_unknown_status_returns_400 (__main__.FeatureAcceptance.test_unknown_status_returns_400) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.056s
+
+OK

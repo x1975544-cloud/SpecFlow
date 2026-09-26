@@ -1,0 +1,3 @@
+include CHANGELOG.md
+recursive-include docs *.md *.json *.log *.patch
+include scripts/smoke_installed.py

@@ -6,6 +6,15 @@
 
 ## 先运行离线演示
 
+从源码安装到当前 Python 环境后，可在任意目录使用 `specflow` 命令：
+
+```powershell
+python -m pip install .
+specflow --help
+```
+
+也可安装构建产物 `specflow_demo-0.1.0-py3-none-any.whl`。版本变化见[更新记录](CHANGELOG.md)。
+
 需要 Python 3.12 或更高版本。在本目录运行，无需安装第三方 Python 运行依赖：
 
 ```powershell

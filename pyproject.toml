@@ -6,8 +6,13 @@ build-backend = "setuptools.build_meta"
 name = "specflow-demo"
 version = "0.1.0"
 description = "A local spec-driven agent engineering workflow with executable TDD gates"
+readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
+
+[project.urls]
+Repository = "https://github.com/x1975544-cloud/SpecFlow"
+Issues = "https://github.com/x1975544-cloud/SpecFlow/issues"
 
 [project.scripts]
 specflow = "specflow.cli:main"

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="430" viewBox="0 0 1200 430" role="img" aria-labelledby="title desc">
+  <title id="title">SpecFlow — From specification to verified code</title>
+  <desc id="desc">A local agent workflow: specify, approve, test red, implement, and verify green.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101e2a"/><stop offset="1" stop-color="#0c141e"/></linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#93b5c7" opacity=".1"/></pattern>
+  </defs>
+  <rect width="1200" height="430" rx="24" fill="url(#bg)"/>
+  <rect width="1200" height="430" rx="24" fill="url(#grid)"/>
+  <path d="M0 1H1200" stroke="#75e1b8" stroke-width="3" opacity=".7"/>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <rect x="48" y="40" width="10" height="10" rx="3" fill="#75e1b8"/>
+    <text x="70" y="51" fill="#a9bdcc" font-size="17" font-weight="600" letter-spacing="3">SPEC-DRIVEN · TEST-VERIFIED</text>
+    <text x="44" y="153" fill="#f2f6fa" font-size="88" font-weight="700" letter-spacing="-4">Spec<tspan fill="#75e1b8">Flow</tspan></text>
+    <text x="48" y="200" fill="#c5d3df" font-size="27">From specification to verified code.</text>
+    <text x="48" y="239" fill="#90a6b9" font-size="19">Local-first. Human approval. Inspectable evidence.</text>
+    <path d="M780 66V241" stroke="#2b414f"/>
+    <text x="822" y="94" fill="#75e1b8" font-size="15" font-weight="600" letter-spacing="2">BUILT TO BE INSPECTED</text>
+    <text x="822" y="137" fill="#edf3f8" font-size="23" font-weight="600">Python + Codex</text>
+    <text x="822" y="176" fill="#a9bdcc" font-size="21">Real tests. Explicit gates.</text>
+    <text x="822" y="213" fill="#a9bdcc" font-size="21">Reports you can review.</text>
+    <path d="M48 278H1152" stroke="#2b414f"/>
+    <g font-size="20" font-weight="600">
+      <rect x="48" y="313" width="196" height="65" rx="12" fill="#172938" stroke="#304858"/>
+      <text x="67" y="352" fill="#8fa6b8" font-size="15">01</text><text x="101" y="353" fill="#ecf2f7">Specify</text>
+      <path d="M254 346H268m-5-5 5 5-5 5" fill="none" stroke="#5b7486" stroke-width="2"/>
+      <rect x="275" y="313" width="196" height="65" rx="12" fill="#172938" stroke="#304858"/>
+      <text x="294" y="352" fill="#8fa6b8" font-size="15">02</text><text x="328" y="353" fill="#ecf2f7">Approve</text>
+      <path d="M481 346H495m-5-5 5 5-5 5" fill="none" stroke="#5b7486" stroke-width="2"/>
+      <rect x="502" y="313" width="196" height="65" rx="12" fill="#30252b" stroke="#75434c"/>
+      <text x="521" y="352" fill="#d999a3" font-size="15">03</text><text x="555" y="353" fill="#ffb1b8">Test red</text>
+      <path d="M708 346H722m-5-5 5 5-5 5" fill="none" stroke="#5b7486" stroke-width="2"/>
+      <rect x="729" y="313" width="196" height="65" rx="12" fill="#172938" stroke="#304858"/>
+      <text x="748" y="352" fill="#8fa6b8" font-size="15">04</text><text x="782" y="353" fill="#ecf2f7">Implement</text>
+      <path d="M935 346H949m-5-5 5 5-5 5" fill="none" stroke="#5b7486" stroke-width="2"/>
+      <rect x="956" y="313" width="196" height="65" rx="12" fill="#14332c" stroke="#3b8068"/>
+      <text x="975" y="352" fill="#83c9ae" font-size="15">05</text><text x="1009" y="353" fill="#94efc9">Verify</text>
+    </g>
+  </g>
+</svg>

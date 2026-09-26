@@ -1,3 +1,4 @@
 include CHANGELOG.md
 recursive-include docs *.md *.json *.log *.patch
+recursive-include docs/assets *.svg
 include scripts/smoke_installed.py
